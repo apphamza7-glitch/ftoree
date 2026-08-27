@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }} — NovaMarket{% endblock %}
+
+{% block content %}
+<div class="container">
+    <p class="breadcrumb mono">~/ <a href="{% url 'shop:product_list' %}">all-products</a> / {{ category.slug }}</p>
+    <h1 class="section-title">{{ category.name }}</h1>
+    {% if category.description %}
+        <p class="category-description">{{ category.description }}</p>
+    {% endif %}
+
+    <div class="products-grid">
+        {% for product in page_obj %}
+            {% include "shop/partials/product_card.html" with product=product %}
+        {% empty %}
+            <p class="empty-state">No products in this category yet.</p>
+        {% endfor %}
+    </div>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">← Previous</a>
+            {% endif %}
+            <span class="pagination-current mono">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next →</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

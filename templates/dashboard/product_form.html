@@ -1,0 +1,68 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}{% if is_edit %}Edit Product{% else %}Add Product{% endif %}{% endblock %}
+{% block page_title %}{% if is_edit %}Edit Product{% else %}Add Product{% endif %}{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" class="dash-form">
+    {% csrf_token %}
+
+    <div class="dash-panel dash-panel--form">
+        <div class="dash-panel-head dash-panel-head--tight">
+            <h2>Product Information</h2>
+        </div>
+
+        <div class="dash-form-grid">
+            {% for field in form %}
+                <div class="dash-form-row {% if field.name == 'description' or field.name == 'short_description' or field.name == 'tags' %}dash-form-row--full{% endif %}">
+                    <label class="mono">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="dash-field-error">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="dash-panel dash-panel--form">
+        <div class="dash-panel-head dash-panel-head--tight">
+            <h2>Product Images</h2>
+        </div>
+
+        {{ formset.management_form }}
+        <div class="dash-image-formset">
+            {% for image_form in formset %}
+                <div class="dash-image-form-item">
+                    {% if image_form.instance.pk and image_form.instance.image %}
+                        <img src="{{ image_form.instance.image.url }}" class="dash-image-preview" alt="">
+                    {% endif %}
+                    {% for hidden in image_form.hidden_fields %}{{ hidden }}{% endfor %}
+                    <div class="dash-form-row">
+                        <label class="mono">Image</label>
+                        {{ image_form.image }}
+                    </div>
+                    <div class="dash-form-row">
+                        <label class="mono">Alt Text</label>
+                        {{ image_form.alt_text }}
+                    </div>
+                    <div class="dash-image-form-row-inline">
+                        <label class="mono"><input type="checkbox" name="{{ image_form.is_primary.html_name }}" {% if image_form.is_primary.value %}checked{% endif %}> Primary</label>
+                        {% if image_form.instance.pk %}
+                            <label class="mono"><input type="checkbox" name="{{ image_form.prefix }}-DELETE"> Delete</label>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="dash-form-actions">
+        <a href="{% url 'dashboard:product_list' %}" class="dash-btn-secondary">Cancel</a>
+        <button type="submit" class="dash-btn-primary">
+            {% if is_edit %}Save Changes{% else %}Create Product{% endif %}
+        </button>
+    </div>
+</form>
+{% endblock %}
+

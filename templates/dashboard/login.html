@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login — NovaMarket</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body class="dash-body dash-login-body">
+    <div class="dash-login-layout">
+        <div class="dash-login-panel">
+            <a href="{% url 'shop:home' %}" class="dash-brand dash-brand--lg">
+                <span class="dash-brand-mark">Nova</span><span class="dash-brand-type">Market</span>
+            </a>
+            <p class="dash-login-eyebrow mono">// store control panel</p>
+            <h1 class="dash-login-title">Sign in to manage your store</h1>
+
+            {% if messages %}
+                <div class="dash-messages">
+                    {% for message in messages %}
+                        <div class="dash-message dash-message--{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" class="dash-login-form">
+                {% csrf_token %}
+                <label class="mono">Username</label>
+                <input type="text" name="username" class="dash-input" required autofocus>
+
+                <label class="mono">Password</label>
+                <input type="password" name="password" class="dash-input" required>
+
+                <button type="submit" class="dash-btn-primary">Sign In</button>
+            </form>
+        </div>
+        <div class="dash-login-visual">
+            <div class="dash-login-visual-grid"></div>
+            <p class="dash-login-visual-quote mono">~/ inventory · orders · customers</p>
+        </div>
+    </div>
+</body>
+</html>

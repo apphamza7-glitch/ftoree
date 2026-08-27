@@ -1,0 +1,16 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Delete Product{% endblock %}
+{% block page_title %}Delete Product{% endblock %}
+
+{% block content %}
+<div class="dash-panel dash-panel--form">
+    <p>Are you sure you want to delete <strong>{{ product.name }}</strong>? This cannot be undone.</p>
+
+    <form method="post" class="dash-form-actions">
+        {% csrf_token %}
+        <a href="{% url 'dashboard:product_list' %}" class="dash-btn-secondary">Cancel</a>
+        <button type="submit" class="dash-btn-danger">Delete Product</button>
+    </form>
+</div>
+{% endblock %}

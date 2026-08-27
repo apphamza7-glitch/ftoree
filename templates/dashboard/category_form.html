@@ -1,0 +1,29 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}{% if is_edit %}Edit Category{% else %}Add Category{% endif %}{% endblock %}
+{% block page_title %}{% if is_edit %}Edit Category{% else %}Add Category{% endif %}{% endblock %}
+
+{% block content %}
+<div class="dash-panel dash-panel--form">
+    <form method="post" enctype="multipart/form-data" class="dash-form">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="dash-form-row">
+                <label class="mono">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <p class="dash-field-error">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div class="dash-form-actions">
+            <a href="{% url 'dashboard:category_list' %}" class="dash-btn-secondary">Cancel</a>
+            <button type="submit" class="dash-btn-primary">
+                {% if is_edit %}Save Changes{% else %}Create Category{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock %} — NovaMarket</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body class="dash-body">
+    <div class="dash-shell">
+        <aside class="dash-sidebar">
+            <a href="{% url 'dashboard:home' %}" class="dash-brand">
+                <span class="dash-brand-mark">Nova</span><span class="dash-brand-type">Market</span>
+            </a>
+            <p class="dash-brand-sub mono">control panel</p>
+
+            <nav class="dash-nav">
+                <a href="{% url 'dashboard:home' %}" class="dash-nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                    <span class="dash-nav-dot"></span> Dashboard
+                </a>
+                <a href="{% url 'dashboard:product_list' %}" class="dash-nav-link {% if 'product' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="dash-nav-dot"></span> Products
+                </a>
+                <a href="{% url 'dashboard:category_list' %}" class="dash-nav-link {% if 'category' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="dash-nav-dot"></span> Categories
+                </a>
+                <a href="{% url 'dashboard:tag_list' %}" class="dash-nav-link {% if 'tag' in request.resolver_match.url_name %}active{% endif %}">
+                    <span class="dash-nav-dot"></span> Tags
+                </a>
+                <span class="dash-nav-link dash-nav-link--disabled">
+                    <span class="dash-nav-dot"></span> Orders <em class="mono">soon</em>
+                </span>
+                <span class="dash-nav-link dash-nav-link--disabled">
+                    <span class="dash-nav-dot"></span> Customers <em class="mono">soon</em>
+                </span>
+            </nav>
+
+            <div class="dash-sidebar-footer">
+                <p class="dash-user mono">{{ request.user.username }}</p>
+                <a href="{% url 'dashboard:logout' %}" class="dash-logout-link">Log out</a>
+            </div>
+        </aside>
+
+        <div class="dash-main">
+            <header class="dash-topbar">
+                <h1 class="dash-page-title">{% block page_title %}Dashboard{% endblock %}</h1>
+                <a href="{% url 'shop:home' %}" class="dash-view-store mono">View store →</a>
+            </header>
+
+            <main class="dash-content">
+                {% if messages %}
+                    <div class="dash-messages">
+                        {% for message in messages %}
+                            <div class="dash-message dash-message--{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+</body>
+</html>

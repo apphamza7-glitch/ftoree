@@ -1,0 +1,67 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dash-stats-grid">
+    <div class="dash-stat-card">
+        <p class="dash-stat-label mono">Total Products</p>
+        <p class="dash-stat-value">{{ total_products }}</p>
+    </div>
+    <div class="dash-stat-card">
+        <p class="dash-stat-label mono">Categories</p>
+        <p class="dash-stat-value">{{ total_categories }}</p>
+    </div>
+    <div class="dash-stat-card">
+        <p class="dash-stat-label mono">Active Products</p>
+        <p class="dash-stat-value">{{ active_products }}</p>
+    </div>
+    <div class="dash-stat-card">
+        <p class="dash-stat-label mono">Featured</p>
+        <p class="dash-stat-value">{{ featured_products }}</p>
+    </div>
+    <div class="dash-stat-card dash-stat-card--warn">
+        <p class="dash-stat-label mono">Out of Stock</p>
+        <p class="dash-stat-value">{{ out_of_stock }}</p>
+    </div>
+</div>
+
+<div class="dash-panel">
+    <div class="dash-panel-head">
+        <h2>Recent Products</h2>
+        <a href="{% url 'dashboard:category_list' %}" class="mono dash-panel-link">manage categories →</a>
+    </div>
+
+    <table class="dash-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th class="mono">Price</th>
+                <th class="mono">Stock</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in recent_products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category.name }}</td>
+                    <td class="mono">${{ product.price }}</td>
+                    <td class="mono">{% if product.unlimited_stock %}∞{% else %}{{ product.stock }}{% endif %}</td>
+                    <td>
+                        {% if product.is_active %}
+                            <span class="dash-badge dash-badge--ok mono">active</span>
+                        {% else %}
+                            <span class="dash-badge dash-badge--off mono">inactive</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5" class="dash-empty">No products yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

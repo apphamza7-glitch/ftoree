@@ -1,0 +1,36 @@
+<div class="product-card">
+    <a href="{% url 'shop:product_detail' product.slug %}" class="product-card-link">
+        <div class="product-card-media">
+            {% if product.images.first %}
+                <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" loading="lazy">
+            {% else %}
+                <div class="media-placeholder">No Image</div>
+            {% endif %}
+            <span class="type-tag mono">{{ product.get_product_type_display }}</span>
+            {% if product.discount_percentage > 0 %}
+                <span class="discount-tag mono">-{{ product.discount_percentage }}%</span>
+            {% endif %}
+        </div>
+        <div class="product-card-body">
+            <p class="product-card-category mono">{{ product.category.name }}</p>
+            <h3 class="product-card-title">{{ product.name }}</h3>
+            <div class="price-ledger">
+                <span class="price-current mono">${{ product.price }}</span>
+                {% if product.compare_at_price %}
+                    <span class="price-compare mono">${{ product.compare_at_price }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </a>
+    <div class="product-card-footer">
+        {% if product.is_in_stock %}
+            <form method="post" action="{% url 'shop:cart_add' product.id %}" class="quick-add-form">
+                {% csrf_token %}
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="btn-quick-add">Add to Cart</button>
+            </form>
+        {% else %}
+            <span class="stock-flag out mono">Out of stock</span>
+        {% endif %}
+    </div>
+</div>

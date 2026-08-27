@@ -1,0 +1,38 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Tags{% endblock %}
+{% block page_title %}Product Tags{% endblock %}
+
+{% block content %}
+<div class="dash-panel">
+    <div class="dash-panel-head">
+        <h2>All Tags</h2>
+        <a href="{% url 'dashboard:tag_create' %}" class="dash-btn-primary dash-btn-sm">+ Add Tag</a>
+    </div>
+
+    <table class="dash-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th class="mono">Slug</th>
+                <th class="mono">Products</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tag in tags %}
+                <tr>
+                    <td>{{ tag.name }}</td>
+                    <td class="mono">{{ tag.slug }}</td>
+                    <td class="mono">{{ tag.product_count }}</td>
+                    <td class="dash-table-actions">
+                        <a href="{% url 'dashboard:tag_delete' tag.pk %}" class="dash-danger-link">Delete</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="4" class="dash-empty">No tags yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

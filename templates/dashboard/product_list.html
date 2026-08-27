@@ -1,0 +1,77 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Products{% endblock %}
+{% block page_title %}Products{% endblock %}
+
+{% block content %}
+<div class="dash-panel">
+    <div class="dash-panel-head">
+        <h2>All Products</h2>
+        <a href="{% url 'dashboard:product_create' %}" class="dash-btn-primary dash-btn-sm">+ Add Product</a>
+    </div>
+
+    <form method="get" class="dash-filter-bar">
+        <input type="text" name="q" placeholder="Search by name, SKU, brand…" value="{{ query }}" class="dash-input">
+        <select name="category" class="dash-input">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="dash-btn-secondary dash-btn-sm">Filter</button>
+    </form>
+
+    <table class="dash-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th class="mono">Type</th>
+                <th class="mono">Price</th>
+                <th class="mono">Stock</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in page_obj %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category.name }}</td>
+                    <td class="mono">{{ product.get_product_type_display }}</td>
+                    <td class="mono">${{ product.price }}</td>
+                    <td class="mono">{% if product.unlimited_stock %}∞{% else %}{{ product.stock }}{% endif %}</td>
+                    <td>
+                        {% if product.is_active %}
+                            <span class="dash-badge dash-badge--ok mono">active</span>
+                        {% else %}
+                            <span class="dash-badge dash-badge--off mono">inactive</span>
+                        {% endif %}
+                        {% if product.is_featured %}
+                            <span class="dash-badge dash-badge--accent mono">featured</span>
+                        {% endif %}
+                    </td>
+                    <td class="dash-table-actions">
+                        <a href="{% url 'dashboard:product_update' product.pk %}">Edit</a>
+                        <a href="{% url 'dashboard:product_delete' product.pk %}" class="dash-danger-link">Delete</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="7" class="dash-empty">No products found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+        <div class="dash-pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">← Prev</a>
+            {% endif %}
+            <span class="mono">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next →</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

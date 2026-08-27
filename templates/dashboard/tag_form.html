@@ -1,0 +1,26 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Add Tag{% endblock %}
+{% block page_title %}Add Tag{% endblock %}
+
+{% block content %}
+<div class="dash-panel dash-panel--form">
+    <form method="post" class="dash-form">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="dash-form-row">
+                <label class="mono">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <p class="dash-field-error">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div class="dash-form-actions">
+            <a href="{% url 'dashboard:tag_list' %}" class="dash-btn-secondary">Cancel</a>
+            <button type="submit" class="dash-btn-primary">Create Tag</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

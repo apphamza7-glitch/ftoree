@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}NovaMarket — Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero-inner">
+        <p class="hero-eyebrow mono">// digital &amp; physical marketplace</p>
+        <h1 class="hero-title">Everything you need,<br>shipped or unlocked instantly.</h1>
+        <p class="hero-sub">Software licenses, subscriptions, accounts and physical goods — one checkout for all of it.</p>
+        <a href="{% url 'shop:product_list' %}" class="btn-primary">Browse All Products</a>
+    </div>
+</section>
+
+<section class="container categories-section">
+    <div class="section-head">
+        <h2 class="section-title">Categories</h2>
+    </div>
+    <div class="categories-grid">
+        {% for category in categories %}
+            <a href="{% url 'shop:category_detail' category.slug %}" class="category-card">
+                <span class="category-index mono">#{{ forloop.counter|stringformat:"02d" }}</span>
+                <span class="category-name">{{ category.name }}</span>
+            </a>
+        {% empty %}
+            <p class="empty-state">No categories yet.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="container products-section">
+    <div class="section-head">
+        <h2 class="section-title">Featured Products</h2>
+    </div>
+    <div class="products-grid">
+        {% for product in featured_products %}
+            {% include "shop/partials/product_card.html" with product=product %}
+        {% empty %}
+            <p class="empty-state">No featured products yet.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="container products-section">
+    <div class="section-head">
+        <h2 class="section-title">New Arrivals</h2>
+    </div>
+    <div class="products-grid">
+        {% for product in new_products %}
+            {% include "shop/partials/product_card.html" with product=product %}
+        {% empty %}
+            <p class="empty-state">No products yet.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

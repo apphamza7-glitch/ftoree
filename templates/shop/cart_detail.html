@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Your Cart — NovaMarket{% endblock %}
+
+{% block content %}
+<div class="container cart-page">
+    <p class="breadcrumb mono">~/ cart</p>
+    <h1 class="section-title">Your Cart</h1>
+
+    {% if cart %}
+        <div class="cart-table-wrap">
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th class="mono">Price</th>
+                        <th class="mono">Quantity</th>
+                        <th class="mono">Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart %}
+                        <tr>
+                            <td>
+                                <div class="cart-product-cell">
+                                    {% if item.product.images.first %}
+                                        <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}">
+                                    {% else %}
+                                        <div class="cart-thumb-placeholder"></div>
+                                    {% endif %}
+                                    <a href="{% url 'shop:product_detail' item.product.slug %}">{{ item.product.name }}</a>
+                                </div>
+                            </td>
+                            <td class="mono">${{ item.price }}</td>
+                            <td>
+                                <form method="post" action="{% url 'shop:cart_update' item.product.id %}" class="qty-form">
+                                    {% csrf_token %}
+                                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1">
+                                    <button type="submit" class="btn-secondary-sm">Update</button>
+                                </form>
+                            </td>
+                            <td class="mono">${{ item.total_price }}</td>
+                            <td>
+                                <form method="post" action="{% url 'shop:cart_remove' item.product.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-remove">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cart-summary">
+            <span class="cart-summary-label">Total</span>
+            <span class="cart-summary-total mono">${{ cart.get_total_price }}</span>
+        </div>
+
+        <div class="cart-actions">
+            <a href="{% url 'shop:product_list' %}" class="btn-secondary">Continue Shopping</a>
+            <a href="#" class="btn-primary">Proceed to Checkout</a>
+        </div>
+    {% else %}
+        <div class="empty-state-block">
+            <p>Your cart is empty.</p>
+            <a href="{% url 'shop:product_list' %}" class="btn-primary">Browse Products</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

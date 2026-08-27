@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}All Products — NovaMarket{% endblock %}
+
+{% block content %}
+<div class="container catalog-layout">
+
+    <aside class="catalog-sidebar">
+        <h3 class="sidebar-heading mono">Categories</h3>
+        <ul class="filter-list">
+            <li>
+                <a href="{% url 'shop:product_list' %}" class="{% if not selected_category %}active{% endif %}">
+                    All Categories
+                </a>
+            </li>
+            {% for cat in categories %}
+                <li>
+                    <a href="?category={{ cat.slug }}" class="{% if selected_category == cat.slug %}active{% endif %}">
+                        {{ cat.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h3 class="sidebar-heading mono">Sort By</h3>
+        <ul class="filter-list">
+            <li><a href="?sort=newest{% if selected_category %}&category={{ selected_category }}{% endif %}" class="{% if sort == 'newest' or not sort %}active{% endif %}">Newest</a></li>
+            <li><a href="?sort=price_asc{% if selected_category %}&category={{ selected_category }}{% endif %}" class="{% if sort == 'price_asc' %}active{% endif %}">Price: Low to High</a></li>
+            <li><a href="?sort=price_desc{% if selected_category %}&category={{ selected_category }}{% endif %}" class="{% if sort == 'price_desc' %}active{% endif %}">Price: High to Low</a></li>
+        </ul>
+    </aside>
+
+    <section class="catalog-main">
+        <div class="catalog-header">
+            <h1 class="section-title">
+                {% if query %}Search results for "{{ query }}"{% else %}All Products{% endif %}
+            </h1>
+            <span class="result-count mono">{{ page_obj.paginator.count }} item{{ page_obj.paginator.count|pluralize }}</span>
+        </div>
+
+        <div class="products-grid">
+            {% for product in page_obj %}
+                {% include "shop/partials/product_card.html" with product=product %}
+            {% empty %}
+                <p class="empty-state">No products found.</p>
+            {% endfor %}
+        </div>
+
+        {% if page_obj.paginator.num_pages > 1 %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">← Previous</a>
+                {% endif %}
+                <span class="pagination-current mono">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">Next →</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </section>
+
+</div>
+{% endblock %}
