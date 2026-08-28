@@ -17,7 +17,11 @@ SECRET_KEY = 'django-insecure-y_h%suexp8-4^l#_e+g$z5_(*t_=ai8%t9dq6(fv7)q6#r1(jy
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "ftoree.vercel.app",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
